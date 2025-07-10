@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Enroll in Our Pottery Workshops!</title>
+<style>
+  /* --- Global Styles --- */
+  body {
+    background: #f7f3ee; /* Soft, solid background color */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to the top for forms that might scroll */
+    min-height: 100vh;
+    color: #333; /* Default text color */
+    margin: 0;
+  }
+
+  /* --- Main Wrapper for Form & Slider --- */
+  .main-wrapper {
+    display: flex;
+    gap: 30px; /* Space between form and slider */
+    max-width: 1200px; /* Overall max width, adjust as needed */
+    width: 100%;
+    align-items: stretch; /* CRITICAL: Makes children (form & slider) stretch to equal height */
+  }
+
+  /* --- Form Container (Left Side) --- */
+  .container {
+    flex: 2; /* Form takes more space (e.g., 2 parts) */
+    max-width: 700px; /* Max width for the form container */
+    background: #fff; /* Solid white background for clean look */
+    padding: 25px 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgb(181 110 47 / 0.4);
+    box-sizing: border-box; /* Include padding in width */
+    display: flex; /* Enable flex for internal layout (e.g., categories) */
+    flex-direction: column; /* Stack contents vertically */
+  }
+
+  /* --- Image Slider Container (Right Side) --- */
+  .image-container {
+    flex: 1.5; /* Slider takes more space than before (e.g., 1.5 parts) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: #fff; /* Solid white background */
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgb(181 110 47 / 0.2);
+    min-height: 450px; /* Ensures a base height, but flex-grow will stretch it */
+
+    /* Slider Specific Styles */
+    overflow: hidden; /* Hide overflowing parts of slides */
+    position: relative; /* For absolute positioning of slides */
+    box-sizing: border-box; /* Include padding in width */
+  }
+
+  .slider-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex; /* To manage slides inside */
+    justify-content: center;
+    align-items: center;
+  }
+
+  .slide {
+    position: absolute; /* Stack slides on top of each other */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 1s ease-in-out; /* Smooth fade transition */
+    text-align: center;
+  }
+
+  .slide.active {
+    opacity: 1; /* Visible when active */
+  }
+
+  .slide img {
+    max-width: 100%;
+    max-height: 90%; /* Allow image to fill more of the height */
+    border-radius: 8px;
+    object-fit: contain; /* Ensures the image fits without cropping */
+    margin-bottom: 10px; /* Space between image and label */
+  }
+
+  .slide-label {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #b56e2f;
+    background-color: rgba(255, 255, 255, 0.7); /* Light background for readability */
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+
+  /* --- Form Element Styles (Cleaner Text Side) --- */
+  h2 {
+    color: #b56e2f;
+    text-align: center;
+    margin-bottom: 25px;
+  }
+  h3 { /* Style for new category headings */
+    color: #b56e2f;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 5px;
+  }
+  label {
+    display: block;
+    margin: 12px 0 6px; /* Consistent top/bottom margin for labels */
+    font-weight: 600;
+    color: #555; /* Slightly softer label color */
+  }
+  input[type=text],
+  input[type=number],
+  input[type=email],
+  input[type=tel],
+  input[type=date],
+  select,
+  textarea {
+    width: 100%;
+    padding: 10px 12px; /* Slightly more vertical padding */
+    border: 1.5px solid #dcdcdc; /* Lighter border color for softer look */
+    border-radius: 6px;
+    font-size: 1rem;
+    resize: vertical;
+    background: rgba(255, 255, 255, 0.9); /* Slightly transparent white for inputs */
+    color: #333; /* Input text color */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  input[type=text]:focus,
+  input[type=number]:focus,
+  input[type=email]:focus,
+  input[type=tel]:focus,
+  input[type=date]:focus,
+  select:focus,
+  textarea:focus {
+    border-color: #b56e2f; /* Focus border color */
+    box-shadow: 0 0 0 3px rgba(181, 110, 47, 0.2); /* Soft focus glow */
+    outline: none; /* Remove default outline */
+  }
+  textarea {
+    min-height: 80px;
+  }
+  input[type=file] {
+    border: none;
+    padding: 0;
+  }
+  .checkbox-group label {
+    font-weight: normal;
+    margin-right: 15px;
+    display: inline-flex; /* Align checkbox and text */
+    align-items: center;
+    color: #333; /* Ensure checkbox labels are visible */
+  }
+  .checkbox-group input[type=checkbox] {
+    margin-right: 6px;
+    width: auto; /* Override 100% width */
+  }
+  .required {
+    color: red;
+    margin-left: 4px;
+  }
+  #payment-preview {
+    margin-top: 10px;
+    max-height: 180px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    display: none;
+    width: 100%;
+    object-fit: contain;
+  }
+  button {
+    background-color: #b56e2f;
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 14px 0;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  button:hover {
+    background-color: #8e5020;
+    transform: translateY(-2px); /* Slight lift on hover */
+  }
+  .terms {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+  }
+  .terms input {
+    margin-right: 8px;
+    width: auto;
+  }
+  .terms label a {
+    color: #b56e2f;
+    text-decoration: none;
+  }
+  .terms label a:hover {
+    text-decoration: underline;
+  }
+  .total-amount {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #b56e2f;
+    text-align: right;
+  }
+
+  /* --- Responsive Adjustments --- */
+  @media (max-width: 900px) {
+    .main-wrapper {
+      flex-direction: column; /* Stack form and slider vertically */
+      align-items: center;
+      padding: 0 10px; /* Add some horizontal padding to main wrapper */
+    }
+    .container, .image-container {
+      width: 100%;
+      max-width: 700px; /* Maintain max-width */
+      margin-bottom: 20px; /* Space between stacked elements */
+      min-height: auto; /* Allow height to adjust naturally when stacked */
+    }
+    .image-container {
+      order: -1; /* Place slider above the form on smaller screens */
+      height: 350px; /* Set a fixed height for the slider on smaller screens */
+      padding: 15px; /* Adjust padding */
+    }
+    .slide img {
+      max-height: 300px; /* Adjust image max-height for mobile */
+    }
+  }
+  @media (max-width: 600px) {
+    .container {
+      padding: 20px; /* Reduce padding for very small screens */
+    }
+    .image-container {
+      height: 280px; /* Smaller height on very small screens */
+    }
+    .slide img {
+      max-height: 220px; /* Further reduce image size on smaller screens */
+    }
+    .slide-label {
+      font-size: 1em;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="main-wrapper">
+    <div class="container">
+      <h2>Enroll in Our Pottery Workshops Today!</h2>
+
+      <h3>Personal Information</h3>
+      <label for="name">Full Name <span class="required">*</span></label>
+      <input type="text" id="name" name="name" placeholder="Your full name" required />
+
+      <label for="age">Age <span class="required">*</span></label>
+      <input type="number" id="age" name="age" placeholder="10 - 100" min="10" max="100" required />
+
+      <label for="email">Email ID <span class="required">*</span></label>
+      <input type="email" id="email" name="email" placeholder="you@example.com" required />
+
+      <label for="phone">Phone Number <span class="required">*</span></label>
+      <input type="tel" id="phone" name="phone" placeholder="10-digit phone number" pattern="\d{10}" required />
+
+      <h3>Workshop Details</h3>
+      <label for="workshopType">Select Workshop <span class="required">*</span></label>
+      <select id="workshopType" name="workshopType" required>
+        <option value="" disabled selected>Select a workshop</option>
+        <option value="Beginner's Wheel Throwing|1500">Beginner's Wheel Throwing (₹1500)</option>
+        <option value="Hand-building Basics|1200">Hand-building Basics (₹1200)</option>
+        <option value="Glazing Techniques|1000">Glazing Techniques (₹1000)</option>
+        <option value="Sculpting Masterclass|2500">Sculpting Masterclass (₹2500)</option>
+      </select>
+
+      <label for="numParticipants">Number of Participants <span class="required">*</span></label>
+      <input type="number" id="numParticipants" name="numParticipants" value="1" min="1" max="10" required />
+
+      <label for="workshopDate">Preferred Workshop Date <span class="required">*</span></label>
+      <input type="date" id="workshopDate" name="workshopDate" required />
+
+      <label for="workshopTime">Preferred Workshop Time <span class="required">*</span></label>
+      <select id="workshopTime" name="workshopTime" required>
+        <option value="" disabled selected>Select a time</option>
+        <option>10:00 AM - 12:00 PM</option>
+        <option>1:00 PM - 3:00 PM</option>
+        <option>4:00 PM - 6:00 PM</option>
+      </select>
+
+      <label for="experience">Experience Level <span class="required">*</span></label>
+      <select id="experience" name="experience" required>
+        <option value="" disabled selected>Select experience</option>
+        <option>Beginner</option>
+        <option>Intermediate</option>
+        <option>Advanced</option>
+      </select>
+
+      <label>Materials Required <span class="required">*</span></label>
+      <div class="checkbox-group" role="group" aria-label="Materials Required">
+        <label><input type="checkbox" name="materials" value="Clay|300"> Clay (₹300)</label>
+        <label><input type="checkbox" name="materials" value="Glaze|150"> Glaze (₹150)</label>
+        <label><input type="checkbox" name="materials" value="Tools|450"> Tools (₹450)</label>
+        <label><input type="checkbox" name="materials" value="None|0"> None (Included)</label>
+      </div>
+
+      <label>Meal Plan (Optional)</label>
+      <div class="checkbox-group" role="group" aria-label="Meal Plan">
+        <label><input type="checkbox" id="mealPlan" name="mealPlan" value="Yes|500"> Include Meal Plan (₹500 per person)</label>
+      </div>
+
+      <h3>Payment Information</h3>
+      <label for="paymentMethod">Payment Method <span class="required">*</span></label>
+      <select id="paymentMethod" name="paymentMethod" required>
+        <option value="" disabled selected>Select a method</option>
+        <option value="Online Transfer">Online Transfer (NEFT/IMPS)</option>
+        <option value="UPI">UPI</option>
+        <option value="Credit/Debit Card">Credit/Debit Card</option>
+      </select>
+
+      <label for="transactionId">Transaction/Payment ID <span class="required">*</span></label>
+      <input type="text" id="transactionId" name="transactionId" placeholder="e.g., UTR1234567890" required />
+
+      <label for="paymentDate">Payment Date <span class="required">*</span></label>
+      <input type="date" id="paymentDate" name="paymentDate" required />
+
+      <label for="payment">Screenshot of Payment <span class="required">*</span></label>
+      <input type="file" id="payment" name="payment" accept="image/*" required />
+      <img id="payment-preview" alt="Payment screenshot preview" />
+
+      <h3>Contact & Preferences</h3>
+      <label for="source">Where did you find us? <span class="required">*</span></label>
+      <select id="source" name="source" required>
+        <option value="" disabled selected>Select an option</option>
+        <option value="Social Media">Social Media</option>
+        <option value="Friend or Family">Friend or Family</option>
+        <option value="Advertisement"
