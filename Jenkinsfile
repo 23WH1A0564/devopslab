@@ -1,58 +1,34 @@
 pipeline {
     agent any
 
-    environment {
-        // Define environment variables if needed, e.g.:
-        // DEPLOY_SERVER = "user@yourserver.com"
-    }
-
     stages {
         stage('Checkout') {
             steps {
-                // Checkout your Git repository
-                git branch: 'main', url: 'https://github.com/your-username/your-repo.git'
+                echo "Checking out code from Git..."
+                checkout scm
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Building the application...'
-                // Example build commands:
-                // sh 'mvn clean package'         // for Java/Maven
-                // sh 'npm install && npm run build' // for Node.js
-                // sh './build.sh'                // your custom script
+                echo "Building the project..."
+                // Example: sh 'mvn clean install'  // Uncomment for Maven builds
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Running tests...'
-                // Example test commands:
-                // sh 'mvn test'
-                // sh 'npm test'
-                // sh './run-tests.sh'
+                echo "Running tests..."
+                // Example: sh 'mvn test'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Deploying application...'
-                // Example deploy steps (customize as needed):
-                // sh 'scp target/app.jar user@server:/path/to/deploy'
-                // sh 'ssh user@server "systemctl restart myapp"'
-                // Or trigger a container deploy, Kubernetes rollout, etc.
+                echo "Deploying the project..."
+                // Example: sh './deploy.sh'
             }
         }
     }
-
-    post {
-        success {
-            echo 'Pipeline completed successfully!'
-            // Add notifications here if needed (email, Slack, etc.)
-        }
-        failure {
-            echo 'Pipeline failed!'
-            // Notifications on failure if desired
-        }
-    }
 }
+
